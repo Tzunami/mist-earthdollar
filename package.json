@@ -1,26 +1,24 @@
 {
-  "name": "Mist",
-  "version": "0.6.0",
+  "name": "Mist-Earthdollar",
+  "version": "0.4.0",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ethereum/mist.git"
+    "url": "https://github.com/Tzunami/mist-earthdollar.git"
   },
   "main": "main.js",
   "dependencies": {
     "bignumber.js": "^2.1.4",
-    "i18next": "^2.3.4",
+    "i18next": "^1.10.6",
     "log-rotate": "^0.2.7",
     "minimongo-standalone": "0.0.9",
     "numeral": "^1.5.3",
-    "os-timesync": "^1.0.3",
     "solc": "^0.2.1-1",
     "underscore": "^1.8.3",
     "web3": "^0.15.1"
   },
   "devDependencies": {
     "del": "^1.2.1",
-    "easy-zip": "0.0.4",
     "electron-packager": "^5.2.1",
     "gulp": "^3.9.0",
     "gulp-jszip": "^0.1.2",

@@ -84,21 +84,17 @@ module.exports = {
                     modalWindow = null;
                     ipc.removeAllListeners('backendAction_unlockedMasterPassword');
 
-                } else if(modalWindow && modalWindow.webContents) {
-                    if(e === 'noBinary') {
-                        modalWindow.close();
-                        modalWindow = null;
-                    } else {
-                        modalWindow.webContents.send('data', {masterPasswordWrong: true});
-                    }
+                } else if(modalWindow) {
+                    modalWindow.webContents.send('data', {masterPasswordWrong: true});
                 }
             };
 
-            ipc.on('backendAction_unlockedMasterPassword', function(ev, err, pw){
+            ipc.on('backendAction_unlockedMasterPassword', function(ev, err, result){
                 if(modalWindow.webContents && ev.sender.getId() === modalWindow.webContents.getId()) {
 
                     if(!err) {
-                        _this._startProcess(type, testnet, binPath, pw, callback, popupCallback);
+                        _this._startProcess(type, testnet, binPath, result, callback, popupCallback);
+
                     } else {
                         app.quit();
                     }
@@ -178,7 +174,7 @@ module.exports = {
 
             // START MAINNET
             } else {
-                args = (type === 'geth') ? ['--fast', '--cache','512'] : ['--unsafe-transactions', '--master', pw];
+                args = (type === 'geth') ? ['--fast'] : ['--unsafe-transactions', '--master', pw];
                 pw = null;
             }
 
@@ -191,14 +187,6 @@ module.exports = {
 
                 if(!cbCalled && _.isFunction(callback)){
                     callCb('Couldn\'t start '+ type +' node!');
-
-                    if(popupCallback) {
-                        popupCallback('noBinary');
-
-                        // set default to geth, to prevent beeing unable to start the wallet
-                        if(type === 'eth')
-                            _this._writeNodeToFile('geth', testnet);
-                    }
                 }
             });
 
@@ -207,9 +195,10 @@ module.exports = {
 
                 // If is eth then the password was typed wrong
                 if(!cbCalled && type === 'eth') {
+                    _this.stopNodes();
 
                     if(popupCallback)
-                        popupCallback('passwordWrong');
+                        popupCallback('Masterpassword wrong');
 
                     // set default to geth, to prevent beeing unable to start the wallet
                     _this._writeNodeToFile('geth', testnet);
@@ -221,6 +210,7 @@ module.exports = {
             // we need to read the buff to prevent geth/eth from stop working
             global.nodes[type].stdout.on('data', function(data) {
 
+                // console.log('stdout ', data.toString());
                 if(!cbCalled && _.isFunction(callback)){
 
                     // (eth) prevent starting, when "Ethereum (++)" didn't appear yet (necessary for the master pw unlock)

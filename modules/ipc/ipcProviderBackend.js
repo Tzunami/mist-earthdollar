@@ -181,8 +181,7 @@ module.exports = function(){
                 result = _this.filterRequestResponse(result, event);
 
                 // if(result && !_.isArray(result))
-                if(!result.id && !_.isArray(result))
-                    console.log('IPCSOCKET '+ _this.sender.getId()  +' NOTIFICATION', event.payload, result, "\n\n");
+                //     console.log('IPCSOCKET '+ _this.sender.getId()  +' RESPONSE', event.payload, result, "\n\n");
 
                 // SEND SYNC back
                 if(event.sync) {
@@ -496,8 +495,8 @@ module.exports = function(){
         }
 
       
-        if(event.sender.returnValue)
-            event.sender.returnValue = socket.ipcSocket.writable;      
+        // if(event.sender.returnValue)       
+        //     event.sender.returnValue = socket.ipcSocket.writable;      
         // else       
         //     event.sender.send('ipcProvider-setWritable', socket.ipcSocket.writable);
     });
@@ -517,22 +516,13 @@ module.exports = function(){
     var sendRequest = function(event, payload, sync) {
         var socket = global.sockets['id_'+ event.sender.getId()];
 
-        if(!socket) {
+        if(!socket)
             // TODO: should we really try to reconnect, after the connection was destroyed?
-            socket = global.sockets['id_'+ event.sender.getId()] = new GethConnection(event);
-        // make sure we are connected
-        } else if(!socket.ipcSocket.writable) {
-            socket.connect(event);
-        }
-
-        // if not writeable send error back
-        if(!socket.ipcSocket.writable) {
-            if(event.sync)
-                event.returnValue = JSON.stringify(returnError(jsonPayload, errorTimeout));
-            else
-                event.sender.send('ipcProvider-data', JSON.stringify(returnError(jsonPayload, errorTimeout)));
+            // socket = global.sockets['id_'+ event.sender.getId()] = new GethConnection(event);
             return;
-        }
+        // make sure we are connected
+        else if(!socket.ipcSocket.writable)
+            socket.connect();
 
         // console.log('SEND REQ', event.sender.getId());
 

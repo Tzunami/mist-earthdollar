@@ -14,10 +14,6 @@ const BigNumber = require('bignumber.js');
 const Web3 = require('web3');
 const ipcProviderWrapper = require('../ipc/ipcProviderWrapper.js');
 const web3Admin = require('../web3Admin.js');
-const basePath = require('../setBasePath.js');
-
-basePath('interface');
-
 
 // disable pinch zoom
 require('web-frame').setZoomLevelLimits(1, 1);
@@ -25,10 +21,7 @@ require('web-frame').setZoomLevelLimits(1, 1);
 // make variables globally accessable
 window.BigNumber = BigNumber;
 window.web3 = new Web3(new Web3.providers.IpcProvider('', ipcProviderWrapper));
-// add admin later
-setTimeout(function(){
-    web3Admin.extend(window.web3);
-}, 1000);
+web3Admin.extend(window.web3);
 
 window.dirname = __dirname;
 window.mist = mist();
@@ -36,10 +29,6 @@ window.syncMinimongo = syncMinimongo;
 window.ipc = ipc;
 window.platform = process.platform;
 
-
-// prevent overwriting the Dapps Web3
-delete global.Web3;
-delete window.Web3;
 
 
 // set the langauge for the electron interface

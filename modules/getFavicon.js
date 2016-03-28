@@ -1,13 +1,6 @@
-/**
-Gets the right Node path
-
-@module getFavicon
-*/
-
-
 var ipc = require('electron').ipcRenderer;
 
-(function() {
+module.export = (function() {
     document.addEventListener('DOMContentLoaded', DOMContentLoaded, false);
 
     function DOMContentLoaded(event) {

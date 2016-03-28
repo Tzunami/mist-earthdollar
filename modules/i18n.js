@@ -5,14 +5,16 @@ The i18n module, loads the language files and initializes i18next
 */
 const i18n = require('i18next');
 
+
+var i18nResources = {
+  dev: { translation: require('../interface/i18n/mist.en.i18n.json') },
+  en: { translation: require('../interface/i18n/mist.en.i18n.json') },            
+  'en-US': { translation: require('../interface/i18n/mist.en.i18n.json') }
+};
+
 i18n.init({
     lng: global.language || 'en',
-    resources: {
-        dev: { translation: require('../interface/i18n/mist.en.i18n.json') },
-        en: { translation: require('../interface/i18n/mist.en.i18n.json') },            
-        de: { translation: require('../interface/i18n/mist.de.i18n.json') },            
-        pt: { translation: require('../interface/i18n/mist.pt.i18n.json') },            
-    }
+    resStore: i18nResources
 });
 
 module.exports = i18n;
